@@ -14,13 +14,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/bilibili/discovery/naming"
-	resolver "github.com/bilibili/discovery/naming/grpc"
 	"github.com/Terry-Mao/goim/internal/comet"
 	"github.com/Terry-Mao/goim/internal/comet/conf"
 	"github.com/Terry-Mao/goim/internal/comet/grpc"
 	md "github.com/Terry-Mao/goim/internal/logic/model"
 	"github.com/Terry-Mao/goim/pkg/ip"
+	"github.com/bilibili/discovery/naming"
+	resolver "github.com/bilibili/discovery/naming/grpc"
 	log "github.com/golang/glog"
 )
 
@@ -39,6 +39,7 @@ func main() {
 	println(conf.Conf.Debug)
 	log.Infof("goim-comet [version: %s env: %+v] start", ver, conf.Conf.Env)
 	// register discovery
+	// 注册
 	dis := naming.New(conf.Conf.Discovery)
 	resolver.Register(dis)
 	// new comet server
@@ -122,6 +123,7 @@ func register(dis *naming.Discovery, srv *comet.Server) context.CancelFunc {
 			}
 			ins.Metadata[md.MetaConnCount] = fmt.Sprint(conns)
 			ins.Metadata[md.MetaIPCount] = fmt.Sprint(len(ips))
+			// 10s 更新一次
 			if err = dis.Set(ins); err != nil {
 				log.Errorf("dis.Set(%+v) error(%v)", ins, err)
 				time.Sleep(time.Second)

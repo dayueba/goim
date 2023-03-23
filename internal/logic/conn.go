@@ -28,9 +28,16 @@ func (l *Logic) Connect(c context.Context, server, cookie string, token []byte) 
 	roomID = params.RoomID
 	accepts = params.Accepts
 	hb = int64(l.c.Node.Heartbeat) * int64(l.c.Node.HeartbeatMax)
+
+	// todo
+	// 这里获取到 mid，roomId 后，可以检查下用户是否存在，权限等问题
+
+	// 如果不是加入某个会话，那么就是创建会话，这里使用uuid生成会话id
 	if key = params.Key; key == "" {
 		key = uuid.New().String()
 	}
+
+	// 保存用户会话
 	if err = l.dao.AddMapping(c, mid, key, server); err != nil {
 		log.Errorf("l.dao.AddMapping(%d,%s,%s) error(%v)", mid, key, server, err)
 	}
